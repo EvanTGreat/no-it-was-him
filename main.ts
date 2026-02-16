@@ -1,4 +1,4 @@
-let can_wall_jump_left = 0
+let Inside_Cyan_Building = 0
 scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -145,21 +145,18 @@ scene.cameraFollowSprite(mySprite)
 let Game_Start = 1
 forever(function () {
     if (Game_Start == 1) {
-        can_wall_jump_left = 0
+        Inside_Cyan_Building = 0
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile21`) || mySprite.tileKindAt(TileDirection.Bottom, assets.tile`myTile21`)) {
+            controller.moveSprite(mySprite, 100, 100)
+        }
+        if (Inside_Cyan_Building == 1 || controller.A.isPressed() && mySprite.tilemapLocation() == tiles.getTileLocation(58, 23)) {
+            Inside_Cyan_Building += 1
+            tiles.setCurrentTilemap(tilemap`level2`)
+        }
         timer.throttle("action", 25, function () {
-            if (controller.up.isPressed() && (mySprite.isHittingTile(CollisionDirection.Bottom) || (mySprite.isHittingTile(CollisionDirection.Left) || mySprite.isHittingTile(CollisionDirection.Right)))) {
+            if (controller.up.isPressed() && mySprite.isHittingTile(CollisionDirection.Bottom)) {
                 timer.background(function () {
                     mySprite.ay = -3675
-                    if (mySprite.isHittingTile(CollisionDirection.Left)) {
-                        controller.moveSprite(mySprite, 0, 0)
-                        mySprite.ax += 200
-                        pause(500)
-                        mySprite.ax = 0
-                        mySprite.vx += 0
-                        controller.moveSprite(mySprite, 100, 0)
-                    } else if (mySprite.isHittingTile(CollisionDirection.Right)) {
-                    	
-                    }
                 })
             } else {
                 controller.moveSprite(mySprite, 100, 0)
